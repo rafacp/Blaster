@@ -11,6 +11,7 @@ class UInputMappingContext;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
+class UWidgetComponent;
 
 UCLASS()
 class BLASTER_API ABlasterCharacter : public ACharacter
@@ -46,6 +47,10 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	TObjectPtr<UCameraComponent> FollowCamera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UWidgetComponent> OverheadWidget;
+
 public:
 
 };
