@@ -12,6 +12,7 @@
 #include "Components/WidgetComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Blaster/Weapon/Weapon.h"
+#include "Blaster/BlasterComponents/CombatComponent.h"
 
 ABlasterCharacter::ABlasterCharacter()
 {
@@ -31,6 +32,9 @@ ABlasterCharacter::ABlasterCharacter()
 
 	OverheadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverheadWidget"));
 	OverheadWidget->SetupAttachment(GetRootComponent());
+
+	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
+	Combat->SetIsReplicated(true);
 }
 
 void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -38,6 +42,15 @@ void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION(ABlasterCharacter, OverlappingWeapon, COND_OwnerOnly);
+}
+
+void ABlasterCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	if (Combat)
+	{
+		Combat->Character = this;
+	}
 }
 
 void ABlasterCharacter::BeginPlay()
@@ -71,6 +84,14 @@ void ABlasterCharacter::Look(const FInputActionValue& InputActionValue)
 	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
 	AddControllerYawInput(InputAxisVector.X);
 	AddControllerPitchInput(InputAxisVector.Y);
+}
+
+void ABlasterCharacter::EquipButtonPressed(const FInputActionValue& InputActionValue)
+{
+	if (HasAuthority() && Combat)
+	{
+		Combat->EquipWeapon(OverlappingWeapon);
+	}
 }
 
 void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
@@ -118,5 +139,6 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PEI->BindAction(MoveAction.Get(), ETriggerEvent::Triggered, this, &ABlasterCharacter::Move);
 	PEI->BindAction(LookAction.Get(), ETriggerEvent::Triggered, this, &ABlasterCharacter::Look);
 	PEI->BindAction(JumpAction.Get(), ETriggerEvent::Triggered, this, &ACharacter::Jump);
+	PEI->BindAction(EquipAction.Get(), ETriggerEvent::Triggered, this, &ABlasterCharacter::EquipButtonPressed);
 }
 
