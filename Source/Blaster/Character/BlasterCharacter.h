@@ -44,10 +44,14 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
 	TObjectPtr<UInputAction> EquipAction;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
+	TObjectPtr<UInputAction> CrouchAction;
 	
 	void Move(const FInputActionValue& InputActionValue);
 	void Look(const FInputActionValue& InputActionValue);
 	void EquipButtonPressed(const FInputActionValue& InputActionValue);
+	void CrouchButtonPressed(const FInputActionValue& InputActionValue);
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
