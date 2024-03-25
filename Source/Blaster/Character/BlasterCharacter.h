@@ -47,11 +47,16 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
 	TObjectPtr<UInputAction> CrouchAction;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
+	TObjectPtr<UInputAction> AimAction;
 	
 	void Move(const FInputActionValue& InputActionValue);
 	void Look(const FInputActionValue& InputActionValue);
 	void EquipButtonPressed(const FInputActionValue& InputActionValue);
 	void CrouchButtonPressed(const FInputActionValue& InputActionValue);
+	void AimButtonPressed(const FInputActionValue& InputActionValue);
+	void AimButtonReleased(const FInputActionValue& InputActionValue);
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
@@ -79,4 +84,7 @@ public:
 	void SetOverlappingWeapon(AWeapon* Weapon);
 
 	bool IsWeaponEquipped();
+
+	bool IsAiming();
+
 };
