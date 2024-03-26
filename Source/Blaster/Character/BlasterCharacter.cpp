@@ -204,6 +204,11 @@ bool ABlasterCharacter::IsAiming()
 	return (Combat && Combat->bAiming);
 }
 
+TObjectPtr<AWeapon> ABlasterCharacter::GetEquippedWeapon() const
+{
+	return Combat ? Combat->EquippedWeapon : nullptr;
+}
+
 void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);

@@ -94,4 +94,5 @@ public:
 
 	FORCEINLINE float GetAOYaw() const { return AO_Yaw; }
 	FORCEINLINE float GetAOPitch() const { return AO_Pitch; }
+	FORCEINLINE TObjectPtr<AWeapon> GetEquippedWeapon() const;
 };
