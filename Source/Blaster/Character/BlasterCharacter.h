@@ -59,6 +59,7 @@ protected:
 	void AimButtonPressed(const FInputActionValue& InputActionValue);
 	void AimButtonReleased(const FInputActionValue& InputActionValue);
 	void AimOffset(float DeltaTime);
+	virtual void Jump() override;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Camera")

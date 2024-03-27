@@ -41,6 +41,7 @@ ABlasterCharacter::ABlasterCharacter()
 	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 0.f, 850.f);
 
 	TurningInPlace = ETurningInPlace::ETIP_NotTurning;
 
@@ -169,6 +170,18 @@ void ABlasterCharacter::AimOffset(float DeltaTime)
 	}
 }
 
+void ABlasterCharacter::Jump()
+{
+	if (bIsCrouched)
+	{
+		UnCrouch();
+	}
+	else
+	{
+		Super::Jump();
+	}
+}
+
 void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
 {
 	if (OverlappingWeapon)
@@ -258,7 +271,7 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	UEnhancedInputComponent* PEI = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	PEI->BindAction(MoveAction.Get(), ETriggerEvent::Triggered, this, &ABlasterCharacter::Move);
 	PEI->BindAction(LookAction.Get(), ETriggerEvent::Triggered, this, &ABlasterCharacter::Look);
-	PEI->BindAction(JumpAction.Get(), ETriggerEvent::Triggered, this, &ACharacter::Jump);
+	PEI->BindAction(JumpAction.Get(), ETriggerEvent::Triggered, this, &ABlasterCharacter::Jump);
 	PEI->BindAction(EquipAction.Get(), ETriggerEvent::Triggered, this, &ABlasterCharacter::EquipButtonPressed);
 	PEI->BindAction(CrouchAction.Get(), ETriggerEvent::Triggered, this, &ABlasterCharacter::CrouchButtonPressed);
 	PEI->BindAction(AimAction.Get(), ETriggerEvent::Started, this, &ABlasterCharacter::AimButtonPressed);
