@@ -15,6 +15,7 @@
 #include "Blaster/BlasterComponents/CombatComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "BlasterAnimInstance.h"
 
 ABlasterCharacter::ABlasterCharacter()
 {
@@ -62,6 +63,21 @@ void ABlasterCharacter::PostInitializeComponents()
 	if (Combat)
 	{
 		Combat->Character = this;
+	}
+}
+
+void ABlasterCharacter::PlayFireMontage(bool bAiming)
+{
+	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) return;
+
+	TObjectPtr<UAnimInstance> AnimInstance = GetMesh()->GetAnimInstance();
+
+	if (AnimInstance && FireWeaponMontage)
+	{
+		AnimInstance->Montage_Play(FireWeaponMontage);
+		FName SectionName;
+		SectionName = bAiming ? FName("RifleAim") : FName("RifleHip");
+		AnimInstance->Montage_JumpToSection(SectionName);
 	}
 }
 
@@ -182,6 +198,22 @@ void ABlasterCharacter::Jump()
 	}
 }
 
+void ABlasterCharacter::FireButtonPressed(const FInputActionValue& InputActionValue)
+{
+	if (Combat)
+	{
+		Combat->FireButtonPressed(true);
+	}
+}
+
+void ABlasterCharacter::FireButtonReleased(const FInputActionValue& InputActionValue)
+{
+	if (Combat)
+	{
+		Combat->FireButtonPressed(false);
+	}
+}
+
 void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
 {
 	if (OverlappingWeapon)
@@ -276,5 +308,7 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PEI->BindAction(CrouchAction.Get(), ETriggerEvent::Triggered, this, &ABlasterCharacter::CrouchButtonPressed);
 	PEI->BindAction(AimAction.Get(), ETriggerEvent::Started, this, &ABlasterCharacter::AimButtonPressed);
 	PEI->BindAction(AimAction.Get(), ETriggerEvent::Completed, this, &ABlasterCharacter::AimButtonReleased);
+	PEI->BindAction(FireAction.Get(), ETriggerEvent::Started, this, &ABlasterCharacter::FireButtonPressed);
+	PEI->BindAction(FireAction.Get(), ETriggerEvent::Completed, this, &ABlasterCharacter::FireButtonReleased);
 }
 

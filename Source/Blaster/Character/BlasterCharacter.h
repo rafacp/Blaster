@@ -15,6 +15,7 @@ class UInputAction;
 class UWidgetComponent;
 class AWeapon;
 class UCombatComponent;
+class UAnimMontage;
 
 UCLASS()
 class BLASTER_API ABlasterCharacter : public ACharacter
@@ -27,6 +28,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PostInitializeComponents() override;
+	void PlayFireMontage(bool bAiming);
 
 protected:
 	virtual void BeginPlay() override;
@@ -51,6 +53,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
 	TObjectPtr<UInputAction> AimAction;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
+	TObjectPtr<UInputAction> FireAction;
 	
 	void Move(const FInputActionValue& InputActionValue);
 	void Look(const FInputActionValue& InputActionValue);
@@ -60,6 +65,8 @@ protected:
 	void AimButtonReleased(const FInputActionValue& InputActionValue);
 	void AimOffset(float DeltaTime);
 	virtual void Jump() override;
+	void FireButtonPressed(const FInputActionValue& InputActionValue);
+	void FireButtonReleased(const FInputActionValue& InputActionValue);
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
@@ -90,6 +97,9 @@ private:
 
 	ETurningInPlace TurningInPlace;
 	void TurnInPlace(float DeltaTime);
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	TObjectPtr<UAnimMontage> FireWeaponMontage;
 
 public:
 	void SetOverlappingWeapon(AWeapon* Weapon);

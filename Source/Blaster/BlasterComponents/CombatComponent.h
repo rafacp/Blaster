@@ -31,6 +31,8 @@ protected:
 	UFUNCTION()
 	void OnRep_EquippedWeapon();
 
+	void FireButtonPressed(bool bPressed);
+
 private:
 	TObjectPtr<ABlasterCharacter> Character;
 	
@@ -46,6 +48,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float AimWalkSpeed;
 
+	bool bFireButtonPressed;
 
 public:	
 
